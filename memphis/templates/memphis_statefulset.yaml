@@ -252,7 +252,7 @@ spec:
           env:
           - name: NAMESPACE
             value: {{ include "memphis.namespace" . }}
-          command: ['sh', '-c', "until nslookup memphis-mongodb-1.mongo.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for memphis-mongodb-1; sleep 2; done"]
+          command: ['sh', '-c', "until nslookup memphis-mongodb-1.mongo.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.{{ $.Values.k8sClusterDomain }}; do echo waiting for memphis-mongodb-1; sleep 2; done"]
       {{- else }}
         - name: k8s-busybox-waits4mongo
           image: busybox:1.28
@@ -260,7 +260,7 @@ spec:
           env:
           - name: NAMESPACE
             value: {{ include "memphis.namespace" . }}
-          command: ['sh', '-c', "until nslookup memphis-mongodb-0.mongo.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for memphis-mongodb-0; sleep 2; done"]
+          command: ['sh', '-c', "until nslookup memphis-mongodb-0.mongo.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.{{ $.Values.k8sClusterDomain }}; do echo waiting for memphis-mongodb-0; sleep 2; done"]
       {{- end }}
         - name: k8s-busybox-initiliaze-mongodb
           image: memphisos/k8s-busybox:latest
